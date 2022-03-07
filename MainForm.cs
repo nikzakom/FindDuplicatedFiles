@@ -19,6 +19,7 @@ namespace FindDuplicatedFiles
             InitializeComponent();
         }
 
+        public bool initialState = true;
         //private string outputFilePath = Application.StartupPath;
 
         private string firstFolderPath = null;
@@ -89,8 +90,10 @@ namespace FindDuplicatedFiles
             {
                 logTB.Text += i;
                 logTB.Text += Environment.NewLine;
+                logTB.Text += Environment.NewLine;
             }
         }
+
 
         // Leave just filename + extension
         private string GetFileName(string filePath)
@@ -127,6 +130,11 @@ namespace FindDuplicatedFiles
             firstFolderFilePaths = GetFiles(firstFolderPath);
 
             firstFolderPathTB.Text = firstFolderPath;
+
+            if (initialState)
+            {
+                initialState = false;
+            }
         }
 
         private void SelectSecondFolderBtn_Click(object sender, EventArgs e)
@@ -137,6 +145,13 @@ namespace FindDuplicatedFiles
                 MessageBox.Show("Please select first folder before selecting second one!", "Error");
                 return;
             }
+
+            //if (!initialState)
+            //{
+            //    firstFolderFilePaths = null;
+            //    secondFolderFilePaths = null;
+            //    duplicatedFiles = null;
+            //}
 
             secondFolderBrowser.ShowDialog();
 
@@ -163,6 +178,8 @@ namespace FindDuplicatedFiles
             string f1;
             string f2;
 
+            logTB.Text += "Duplicated files:" + Environment.NewLine;
+
             foreach (var i in firstFileList)
             {
                 f1 = GetFileName(i);
@@ -173,14 +190,14 @@ namespace FindDuplicatedFiles
 
                     if (f1 == f2)
                     {
-                        duplicatedFiles.Add(j);
-                        break;
+                        duplicatedFiles.Add($"{i} <==> {j}");
+                        //duplicatedFiles.Add($"{f1} <==> {f2}");
+                        //break;
                     }
                 }
             }
 
             logTB.Text += "Duplicates found: " + duplicatedFiles.Count + Environment.NewLine;
-            logTB.Text += "Duplicated files:" + Environment.NewLine;
 
             PrintFileList(duplicatedFiles);
 
